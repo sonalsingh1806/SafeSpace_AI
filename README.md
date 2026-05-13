@@ -276,7 +276,7 @@ The script provisions: ECR repository → Docker build + push → Lambda functio
 ![Landing Page](screenshots/Landing%20Page.png)
 
 ### CBT Chat with Response Harness
-![Chat Support](screenshotsCBT%20grounded%20AI%20safespace_response_demo.png)
+![Chat Support](screenshots/safespace_response_demo.png)
 
 
 ### Box Breathing Visualizer
