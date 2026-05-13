@@ -9,6 +9,36 @@ from dotenv import load_dotenv
 # Load API key from server .env (shared config for ingestion)
 load_dotenv(Path(__file__).resolve().parents[1] / "server" / ".env")
 
+def classify_content_type(filename: str, content: str) -> str:
+    """
+    Heuristically tag each .txt file with a CBT content type.
+    These tags let you filter retrieval in server.py later.
+    """
+    name = filename.lower()
+    text = content.lower()
+
+    # Filename-based rules (most reliable — name your files clearly)
+    if any(k in name for k in ["technique", "exercise", "method", "tool"]):
+        return "technique"
+    if any(k in name for k in ["example", "case", "scenario", "story"]):
+        return "example"
+    if any(k in name for k in ["psycho", "education", "guide", "info", "about"]):
+        return "psychoeducation"
+    if any(k in name for k in ["dialogue", "conversation", "chat", "transcript"]):
+        return "dialogue"
+
+    # Content-based fallback (scan first 400 chars)
+    snippet = text[:400]
+    if any(k in snippet for k in ["step 1", "step 2", "how to", "instructions", "practice"]):
+        return "technique"
+    if any(k in snippet for k in ["for example", "imagine", "consider a person", "case study"]):
+        return "example"
+    if any(k in snippet for k in ["user:", "patient:", "therapist:", "client:"]):
+        return "dialogue"
+
+    # Default — still useful for unstructured content
+    return "psychoeducation"
+
 def load_documents(docs_path="docs"):
     """Load all text files from the docs directory, with encoding fallback."""
     print(f"Loading documents from {docs_path}...")
@@ -37,8 +67,14 @@ def load_documents(docs_path="docs"):
         if content is None:
             raise RuntimeError(f"Error loading {file_path}") from last_error
         documents.append(
-            Document(page_content=content, metadata={"source": str(file_path)})
-        )
+    Document(
+        page_content=content,
+        metadata={
+            "source": str(file_path),
+            "content_type": classify_content_type(file_path.stem, content)
+        }
+    )
+)
     
    
     for i, doc in enumerate(documents[:2]):  # Show first 2 documents

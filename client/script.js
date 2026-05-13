@@ -138,51 +138,10 @@ function handleActionClick(button) {
     
     // Handle different actions
     switch(actionText) {
-        case 'Start Chat':
-            startChatSession();
-            break;
-        case 'Breathing Exercise':
-            startBreathingExercise();
-            break;
         case 'Music Therapy':
             startCalmingMusic();
             break;
-        case 'Journal Entry':
-            openJournal();
-            break;
-        default:
-            console.log(`Action clicked: ${actionText}`);
     }
-}
-
-function startChatSession() {
-    // Simulate starting a chat session
-    showNotification('Starting chat session...', 'info');
-    
-    // In a real app, this would navigate to the chat interface
-    setTimeout(() => {
-        showNotification('Chat session ready! 💬', 'success');
-    }, 1000);
-}
-
-function startBreathingExercise() {
-    // Simulate starting breathing exercise
-    showNotification('Preparing breathing exercise...', 'info');
-    
-    // In a real app, this would open the breathing exercise interface
-    setTimeout(() => {
-        showNotification('Breathing exercise started 🧘', 'success');
-    }, 1000);
-}
-
-function openJournal() {
-    // Simulate opening journal
-    showNotification('Opening journal...', 'info');
-    
-    // In a real app, this would open the journal interface
-    setTimeout(() => {
-        showNotification('Journal ready for your thoughts 📝', 'success');
-    }, 1000);
 }
 
 function startCalmingMusic() {
@@ -319,51 +278,3 @@ function loadUserData() {
     }, 500);
 }
 
-// Add CSS animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOut {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-    
-    @keyframes slideInUp {
-        from {
-            transform: translateY(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOutDown {
-        from {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateY(100%);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(style);

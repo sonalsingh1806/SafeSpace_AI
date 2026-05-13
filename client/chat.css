@@ -415,6 +415,97 @@
     font-style: italic;
 }
 
+/* Response Harness */
+.response-harness {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.response-harness::before {
+    display: none;
+}
+
+.harness-section {
+    padding: 14px 18px;
+}
+
+.harness-section p {
+    margin: 0;
+    line-height: 1.65;
+    font-size: 0.95rem;
+    color: var(--dark-gray);
+    white-space: pre-wrap;
+}
+
+.harness-acknowledge {
+    background: var(--soft-white);
+    border-radius: 18px 18px 4px 4px;
+    border: 1px solid var(--medium-gray);
+}
+
+.harness-acknowledge p {
+    font-size: 1rem;
+}
+
+.harness-explore {
+    background: var(--warm-gray);
+    border-left: 1px solid var(--medium-gray);
+    border-right: 1px solid var(--medium-gray);
+    border-bottom: 1px solid var(--medium-gray);
+}
+
+.harness-reframe {
+    border-left: 3px solid var(--lavender-400);
+    border-right: 1px solid var(--medium-gray);
+    border-bottom: 1px solid var(--medium-gray);
+    background: rgba(159, 121, 222, 0.06);
+    padding-left: 16px;
+}
+
+.harness-reframe p {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.harness-try {
+    background: rgba(127, 176, 105, 0.1);
+    border: 1px solid rgba(127, 176, 105, 0.25);
+    border-radius: 4px 4px 4px 4px;
+}
+
+.harness-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent-green);
+    margin-bottom: 5px;
+}
+
+.harness-question {
+    background: var(--soft-white);
+    border-radius: 4px 4px 18px 18px;
+    border: 1px solid var(--medium-gray);
+    border-top: none;
+}
+
+.harness-question p {
+    font-style: italic;
+    color: var(--text-gray);
+}
+
+/* when reframe is absent, round the try section's top corners */
+.harness-explore + .harness-try,
+.harness-reframe + .harness-try {
+    border-radius: 0;
+}
+
 /* Typing Indicator */
 .typing-indicator {
     display: none;

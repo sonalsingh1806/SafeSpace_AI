@@ -1,0 +1,70 @@
+<svg width="520" height="280" viewBox="0 0 520 280" fill="#F5F5F0" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGlow" x1="260" y1="48" x2="260" y2="244" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F9F4FF" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#E8DDF7" stop-opacity="0.2"/>
+    </linearGradient>
+
+    <linearGradient id="petalCenter" x1="260" y1="50" x2="260" y2="212" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFDFE"/>
+      <stop offset="0.45" stop-color="#EDE1FA"/>
+      <stop offset="1" stop-color="#C4A9E8"/>
+    </linearGradient>
+
+    <linearGradient id="petalLeft" x1="172" y1="92" x2="230" y2="214" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F3E9FF"/>
+      <stop offset="1" stop-color="#B794E2"/>
+    </linearGradient>
+
+    <linearGradient id="petalRight" x1="348" y1="92" x2="290" y2="214" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F3E9FF"/>
+      <stop offset="1" stop-color="#B794E2"/>
+    </linearGradient>
+
+    <linearGradient id="petalOuterLeft" x1="108" y1="122" x2="208" y2="224" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EBDDFA"/>
+      <stop offset="1" stop-color="#9D7ACD"/>
+    </linearGradient>
+
+    <linearGradient id="petalOuterRight" x1="412" y1="122" x2="312" y2="224" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EBDDFA"/>
+      <stop offset="1" stop-color="#9D7ACD"/>
+    </linearGradient>
+
+    <radialGradient id="innerGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(260 168) rotate(90) scale(72 132)">
+      <stop stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="shadow" x="53" y="26" width="414" height="217" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#B99AD8" flood-opacity="0.22"/>
+    </filter>
+
+    <filter id="baseBlur" x="58" y="171" width="404" height="76" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+
+  <rect width="520" height="280" fill="#F5F5F0"/>
+
+  <ellipse cx="260" cy="214" rx="124" ry="34" fill="#F5F5F0" opacity="0.65"/>
+  <g filter="url(#baseBlur)" opacity="0.5">
+    <ellipse cx="260" cy="209" rx="112" ry="18" fill="#F5F5F0"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <path d="M260 50C292 88 304 134 260 212C216 134 228 88 260 50Z" fill="#F5F5F0"/>
+
+    <path d="M185 88C219 110 237 150 226 212C183 184 159 142 185 88Z" fill="#F5F5F0"/>
+    <path d="M335 88C301 110 283 150 294 212C337 184 361 142 335 88Z" fill="#F5F5F0"/>
+
+    <path d="M116 122C158 138 190 171 210 216C156 209 110 186 116 122Z" fill="#F5F5F0" opacity="0.92"/>
+    <path d="M404 122C362 138 330 171 310 216C364 209 410 186 404 122Z" fill="#F5F5F0" opacity="0.92"/>
+
+    <path d="M260 96C281 121 287 150 260 198C233 150 239 121 260 96Z" fill="#F5F5F0" opacity="0.96"/>
+  </g>
+
+  <ellipse cx="260" cy="170" rx="86" ry="42" fill="#F5F5F0" opacity="0.8"/>
+
+  <path d="M172 217C195 209 223 205 260 205C297 205 325 209 348 217" stroke="#F5F5F0" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+</svg>

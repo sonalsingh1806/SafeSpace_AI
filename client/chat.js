@@ -22,7 +22,6 @@ class ChatInterface {
         this.breathingCycle = document.getElementById('breathingCycle');
         this.breathingDot = document.getElementById('breathingDot');
         this.phaseCards = document.querySelectorAll('[data-phase-card]');
-        
         this.isTyping = false;
         this.isListening = false;
         this.speechRecognition = null;
@@ -206,18 +205,13 @@ class ChatInterface {
         this.chatContainer.classList.add('active');
         this.messageInput.focus();
         
-        // Add opening animation
         this.chatContainer.style.animation = 'fadeIn 0.3s ease';
-        
-        console.log('Chat opened');
     }
     
     closeChat() {
         this.stopVoiceInput();
         this.chatContainer.classList.remove('active');
         this.dashboardContainer.style.display = 'block';
-        
-        console.log('Chat closed');
     }
 
     openBreathingExercise() {
@@ -453,7 +447,7 @@ class ChatInterface {
             unsupported ? 'Voice input unavailable' : this.isListening ? 'Stop voice input' : 'Start voice input'
         );
     }
-    
+      
     async callRagApi(userMessage) {
         try {
             const response = await fetch(`${APP_CONFIG.apiBaseUrl}/rag`, {
@@ -461,32 +455,41 @@ class ChatInterface {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ userMessage })
+                body: JSON.stringify({ 
+                    userMessage,
+                    conversationHistory: this.messageHistory.slice(-6).map(m => ({
+                        role: m.sender === 'user' ? 'user' : 'assistant',
+                        content: m.content
+                    }))
+                })
             });
 
             let data = {};
             try {
                 data = await response.json();
             } catch {
-                // non-JSON body
+                /* non-JSON body */
             }
 
             this.hideTypingIndicator();
 
             if (!response.ok) {
-                const detail = data.detail;
-                const msg =
-                    typeof detail === "string"
-                        ? detail
-                        : Array.isArray(detail)
-                          ? detail.map((d) => d.msg || d).join(" ")
-                          : `Request failed (${response.status}).`;
-                this.addMessage(msg || "Something went wrong. Please try again.", "bot");
+                let detail = `Something went wrong (${response.status}).`;
+                if (typeof data.detail === 'string') {
+                    detail = data.detail;
+                } else if (Array.isArray(data.detail)) {
+                    detail = data.detail.map((d) => d.msg || d.message || JSON.stringify(d)).join(' ');
+                }
+                this.addMessage(detail, 'bot');
+                console.error('RAG API Error:', response.status, data);
                 return;
             }
 
-            this.addMessage(data.reply ?? "No reply from server.", "bot");
-    
+            if (data.sections) {
+                this.addBotMessage(data.sections);
+            } else {
+                this.addMessage(data.reply ?? 'No reply from the assistant.', 'bot');
+            }
         } catch (err) {
             this.hideTypingIndicator();
             const reason = err && err.message ? err.message : String(err);
@@ -496,7 +499,12 @@ class ChatInterface {
             const hint = isNetwork
                 ? `Cannot reach the API at ${APP_CONFIG.apiBaseUrl}. Start the backend (e.g. python server.py in the server folder), ensure client/config.js matches your PORT in server/.env, and open the site over http://localhost (not as a file:// page).`
                 : reason;
-            this.addMessage(`Sorry, I couldn’t reach the server. ${hint}`, "bot");
+            this.addMessage(
+                isNetwork
+                    ? "I’m having a little trouble connecting right now. Please try again in a moment — I’m here for you."
+                    : "Something went wrong on my end. Please try sending your message again.",
+                "bot"
+            );
             console.error("RAG API Error:", err);
         }
     }
@@ -507,6 +515,79 @@ class ChatInterface {
         this.sendMessage();
     }
     
+    addBotMessage(sections) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message bot-message';
+
+        const avatarDiv = document.createElement('div');
+        avatarDiv.className = 'message-avatar';
+        const avatarIcon = document.createElement('div');
+        avatarIcon.className = 'avatar-icon';
+        avatarIcon.textContent = '🤖';
+        avatarDiv.appendChild(avatarIcon);
+
+        const messageContent = document.createElement('div');
+        messageContent.className = 'message-content';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'message-bubble response-harness';
+
+        const sectionDefs = [
+            { key: 'acknowledge', cls: 'harness-acknowledge', prefix: '🌿 ' },
+            { key: 'explore',     cls: 'harness-explore' },
+            { key: 'reframe',     cls: 'harness-reframe' },
+            { key: 'try_this',    cls: 'harness-try',        label: '✨ Try this' },
+            { key: 'question',    cls: 'harness-question',   prefix: '💬 ' },
+        ];
+
+        let hasContent = false;
+        for (const def of sectionDefs) {
+            const text = sections[def.key];
+            if (!text) continue;
+            hasContent = true;
+
+            const section = document.createElement('div');
+            section.className = `harness-section ${def.cls}`;
+
+            if (def.label) {
+                const label = document.createElement('span');
+                label.className = 'harness-label';
+                label.textContent = def.label;
+                section.appendChild(label);
+            }
+
+            const p = document.createElement('p');
+            p.textContent = def.prefix ? `${def.prefix}${text}` : text;
+            section.appendChild(p);
+
+            bubble.appendChild(section);
+        }
+
+        if (!hasContent) {
+            const p = document.createElement('p');
+            p.textContent = "I'm here for you.";
+            bubble.appendChild(p);
+        }
+
+        const messageTime = document.createElement('div');
+        messageTime.className = 'message-time';
+        messageTime.textContent = this.getCurrentTime();
+
+        messageContent.appendChild(bubble);
+        messageContent.appendChild(messageTime);
+        messageDiv.appendChild(avatarDiv);
+        messageDiv.appendChild(messageContent);
+
+        this.chatMessages.appendChild(messageDiv);
+        this.scrollToBottom();
+
+        this.messageHistory.push({
+            content: Object.values(sections).filter(Boolean).join(' '),
+            sender: 'bot',
+            timestamp: new Date().toISOString()
+        });
+    }
+
     addMessage(content, sender) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}-message`;
@@ -550,100 +631,6 @@ class ChatInterface {
             sender: sender,
             timestamp: new Date().toISOString()
         });
-    }
-    
-    generateBotResponse(userMessage) {
-        const responses = this.getContextualResponses(userMessage);
-        const response = responses[Math.floor(Math.random() * responses.length)];
-        
-        this.addMessage(response, 'bot');
-        
-        // Add helpful suggestions for certain responses
-        if (this.shouldShowSuggestions(response)) {
-            setTimeout(() => {
-                this.addSuggestions(response);
-            }, 500);
-        }
-    }
-    
-    getContextualResponses(userMessage) {
-        const message = userMessage.toLowerCase();
-        
-        if (message.includes('anxious') || message.includes('anxiety')) {
-            return [
-                "I understand you're feeling anxious. That's completely normal. Let's work through this together. Can you tell me what's making you feel this way?",
-                "Anxiety can feel overwhelming, but remember that this feeling will pass. Would you like to try a breathing exercise together?",
-                "You're not alone in this. Many people experience anxiety, and it's okay to feel this way. What would help you feel more grounded right now?"
-            ];
-        }
-        
-        if (message.includes('panic') || message.includes('panic attack')) {
-            return [
-                "I'm here with you during this panic attack. Let's focus on getting through this moment together. Can you try taking slow, deep breaths with me?",
-                "Panic attacks can be scary, but they're not dangerous. You're safe, and this will pass. Let's work on grounding techniques together.",
-                "I understand this feels overwhelming right now. Let's take it one breath at a time. You're doing great by reaching out."
-            ];
-        }
-        
-        if (message.includes('calm') || message.includes('calming') || message.includes('breathe')) {
-            return [
-                "Great! Let's focus on calming techniques. Try the 4-7-8 breathing: inhale for 4 counts, hold for 7, exhale for 8. Would you like to try this together?",
-                "Breathing exercises can be very helpful. Let's start with simple deep breaths. Inhale slowly through your nose, hold for a moment, then exhale gently.",
-                "I'm glad you want to focus on calming down. Sometimes counting backwards from 10 can help ground us. Would you like to try that?"
-            ];
-        }
-        
-        if (message.includes('overwhelmed') || message.includes('stress')) {
-            return [
-                "Feeling overwhelmed is understandable. Let's break things down into smaller, manageable pieces. What's one small thing you can focus on right now?",
-                "When we feel overwhelmed, it helps to pause and take a step back. What's causing you the most stress right now?",
-                "You're doing great by acknowledging these feelings. Sometimes just talking about what's overwhelming us can help. What's on your mind?"
-            ];
-        }
-        
-        if (message.includes('sad') || message.includes('depressed') || message.includes('down')) {
-            return [
-                "I'm sorry you're feeling down. These feelings are valid, and it's okay to not be okay sometimes. What's been weighing on your mind?",
-                "Feeling sad can be really difficult. You're not alone in this. Is there something specific that's been making you feel this way?",
-                "It takes courage to share these feelings. Thank you for trusting me. What would feel helpful right now?"
-            ];
-        }
-        
-        // Default responses
-        return [
-            "Thank you for sharing that with me. I'm here to listen and support you. Can you tell me more about what you're experiencing?",
-            "I appreciate you opening up to me. How are you feeling about this situation?",
-            "That sounds challenging. I'm here to help you work through this. What would be most helpful for you right now?",
-            "Thank you for trusting me with your thoughts. You're doing great by reaching out. What's on your mind?",
-            "I'm here to support you through this. Can you help me understand what you're going through?"
-        ];
-    }
-    
-    shouldShowSuggestions(response) {
-        return response.includes('breathing') || response.includes('exercise') || response.includes('grounding');
-    }
-    
-    addSuggestions(response) {
-        const suggestionsDiv = document.createElement('div');
-        suggestionsDiv.className = 'quick-responses';
-        
-        const suggestions = [
-            "Yes, let's try breathing together",
-            "I'd like to try grounding techniques",
-            "Can you guide me through it?",
-            "I'm ready to try"
-        ];
-        
-        suggestions.forEach(suggestion => {
-            const btn = document.createElement('button');
-            btn.className = 'quick-response-btn';
-            btn.textContent = suggestion;
-            btn.dataset.response = suggestion;
-            suggestionsDiv.appendChild(btn);
-        });
-        
-        this.chatMessages.appendChild(suggestionsDiv);
-        this.scrollToBottom();
     }
     
     showTypingIndicator() {
@@ -711,10 +698,7 @@ class ChatInterface {
         return now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     }
     
-    loadWelcomeMessage() {
-        // Welcome message is already in HTML, just ensure it's visible
-        console.log('Welcome message loaded');
-    }
+    loadWelcomeMessage() {}
 }
 
 // Initialize chat when DOM is loaded

@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafeSpace AI - Chat</title>
+    <meta name="description" content="SafeSpace AI — a CBT-guided mindful companion for anxiety and stress support. Chat, breathing exercises, and calming music in one place.">
+    <meta name="theme-color" content="#9f79de">
+    <meta property="og:title" content="SafeSpace AI">
+    <meta property="og:description" content="A CBT-guided mindful companion for anxiety support — chat, breathe, and reset.">
+    <meta property="og:type" content="website">
+    <title>SafeSpace AI</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="chat.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -15,8 +20,8 @@
         <div class="chat-header">
             <div class="chat-header-content">
                 <div class="chat-title-section">
-                    <button class="back-btn" id="backBtn">
-                        <span class="back-icon">←</span>
+                    <button class="back-btn" id="backBtn" aria-label="Back to dashboard">
+                        <span class="back-icon" aria-hidden="true">←</span>
                     </button>
                     <div class="chat-title">
                         <h1>SafeSpace AI</h1>
@@ -77,8 +82,8 @@
                     <button class="mic-btn" id="micBtn" type="button" aria-label="Start voice input">
                         <span class="mic-icon">🎙</span>
                     </button>
-                    <button class="send-btn" id="sendBtn">
-                        <span class="send-icon">→</span>
+                    <button class="send-btn" id="sendBtn" aria-label="Send message">
+                        <span class="send-icon" aria-hidden="true">→</span>
                     </button>
                 </div>
                 <div class="voice-status" id="voiceStatus" aria-live="polite"></div>

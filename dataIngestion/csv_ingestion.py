@@ -72,12 +72,16 @@ Response: {row['Response']}
                 # fallback: join all columns
                 text = " ".join(str(v) for v in row.values)
 
-            documents.append(
-                Document(
-                    page_content=text,
-                    metadata={"dataset": dataset_name}
-                )
-            )
+            content_type = "dialogue" if "Context" in df.columns and "Response" in df.columns else "psychoeducation"
+documents.append(
+    Document(
+        page_content=text,
+        metadata={
+            "dataset": dataset_name,
+            "content_type": content_type
+        }
+    )
+)
 
     print("Documents created:", len(documents), flush=True)
     return documents

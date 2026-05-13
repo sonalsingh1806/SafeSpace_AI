@@ -1,0 +1,35 @@
+c:\capstone\SafeSpaceAI\SafeSpaceAI\server\server.py:10: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+
+thread '<unnamed>' panicked at rust\sqlite\src\db.rs:157:42:
+range start index 10 out of range for slice of length 9
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Traceback (most recent call last):
+  File "c:\capstone\SafeSpaceAI\SafeSpaceAI\server\server.py", line 70, in <module>
+    db = Chroma(
+         ^^^^^^^
+  File "C:\Users\sonal\AppData\Local\Programs\Python\Python312\Lib\site-packages\langchain_chroma\vectorstores.py", line 374, in __init__
+    self._client = chromadb.PersistentClient(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sonal\AppData\Local\Programs\Python\Python312\Lib\site-packages\chromadb\__init__.py", line 185, in PersistentClient
+    return ClientCreator(tenant=tenant, database=database, settings=settings)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sonal\AppData\Local\Programs\Python\Python312\Lib\site-packages\chromadb\api\client.py", line 65, in __init__
+    super().__init__(settings=settings)
+  File "C:\Users\sonal\AppData\Local\Programs\Python\Python312\Lib\site-packages\chromadb\api\shared_system_client.py", line 19, in __init__
+    SharedSystemClient._create_system_if_not_exists(self._identifier, settings)
+  File "C:\Users\sonal\AppData\Local\Programs\Python\Python312\Lib\site-packages\chromadb\api\shared_system_client.py", line 32, in _create_system_if_not_exists
+    new_system.start()
+  File "C:\Users\sonal\AppData\Local\Programs\Python\Python312\Lib\site-packages\chromadb\config.py", line 471, in start
+    component.start()
+  File "C:\Users\sonal\AppData\Local\Programs\Python\Python312\Lib\site-packages\chromadb\api\rust.py", line 114, in start
+    self.bindings = chromadb_rust_bindings.Bindings(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyo3_runtime.PanicException: range start index 10 out of range for slice of length 9
