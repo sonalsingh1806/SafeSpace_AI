@@ -92,6 +92,19 @@ Beyond chat, the app includes two additional therapeutic tools:
 
 ---
 
+## Clinical Safety & Guardrails
+
+Working with mental health advisors, we identified the failure
+modes that matter in supportive AI — not just wrong answers,
+but responses that could cause harm.
+
+Implemented constraints:
+- Crisis detection: redirects to 988 when distress signals detected
+- Scope enforcement: never diagnoses, never replaces professional care  
+- CBT grounding: responses validated against clinical frameworks
+- Output validation: structured checks before every response is sent
+
+---
 ## Architecture
 
 ```
