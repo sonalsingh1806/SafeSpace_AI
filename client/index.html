@@ -1,21 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SafeSpace AI — a CBT-guided mindful companion for anxiety and stress support. Chat, breathing exercises, and calming music in one place.">
-    <meta name="theme-color" content="#9f79de">
-    <meta property="og:title" content="SafeSpace AI">
-    <meta property="og:description" content="A CBT-guided mindful companion for anxiety support — chat, breathe, and reset.">
-    <meta property="og:type" content="website">
-    <title>SafeSpace AI</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="chat.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SafeSpace AI - Chat</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            sunsetPeach: "#F7C6A3",
+                            apricot: "#F2A97E",
+                            coralGlow: "#F4B8A8",
+                            lavenderMist: "#D9C4E8",
+                            eveningRose: "#E7A8C9",
+                            goldenHaze: "#F6E3B5",
+                            farHill: "#A89BC4",
+                            midHill: "#C3B4D9",
+                            nearHill: "#8E9F7F",
+                            hazeWhite: "#FFF9F4",
+                            bloomGold: "#FCEFD8"
+                        },
+                        keyframes: {
+                            drift: {
+                                "0%": { transform: "translateX(0)" },
+                                "100%": { transform: "translateX(40px)" }
+                            },
+                            float: {
+                                "0%, 100%": { transform: "translateY(0)", opacity: "0.4" },
+                                "50%": { transform: "translateY(-20px)", opacity: "0.7" }
+                            }
+                        },
+                        animation: {
+                            drift: "drift 90s ease-in-out infinite alternate",
+                            float: "float 110s ease-in-out infinite"
+                        }
+                    }
+                }
+            };
+        </script>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="chat.css">
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    </head>
 <body>
+    <div class="app-shell">
     <!-- Chat Container -->
     <div class="chat-container" id="chatContainer">
+        <div class="ghibli-bg-slot" data-ghibli-scope="chat"></div>
         <!-- Chat Header -->
         <div class="chat-header">
             <div class="chat-header-content">
@@ -37,12 +70,139 @@
             </div>
         </div>
 
+        <!-- Cozy meadow mascot banner -->
+        <div class="chat-mascot-banner" aria-hidden="true">
+            <div class="chat-mascot-bloom"></div>
+            <div class="chat-mascot" id="chatMascot">
+                <svg class="chat-mascot-svg" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="bunnyBody" cx="38%" cy="34%" r="78%">
+                            <stop offset="0%"   stop-color="#fff7e8"/>
+                            <stop offset="40%"  stop-color="#ffe2cd"/>
+                            <stop offset="78%"  stop-color="#f5bcb8"/>
+                            <stop offset="100%" stop-color="#d895a4"/>
+                        </radialGradient>
+                        <radialGradient id="bunnyBelly" cx="50%" cy="50%" r="60%">
+                            <stop offset="0%"   stop-color="rgba(255,250,232,0.9)"/>
+                            <stop offset="100%" stop-color="rgba(255,225,205,0)"/>
+                        </radialGradient>
+                        <linearGradient id="bunnyInnerEar" x1="50%" y1="100%" x2="50%" y2="0%">
+                            <stop offset="0%"   stop-color="#f29ab2"/>
+                            <stop offset="50%"  stop-color="#fcc7c8"/>
+                            <stop offset="100%" stop-color="#ffe1d4"/>
+                        </linearGradient>
+                        <radialGradient id="bunnyCheek" cx="50%" cy="50%" r="55%">
+                            <stop offset="0%"   stop-color="rgba(255,154,178,0.8)"/>
+                            <stop offset="100%" stop-color="rgba(255,154,178,0)"/>
+                        </radialGradient>
+                        <radialGradient id="bunnyNose" cx="50%" cy="35%" r="65%">
+                            <stop offset="0%"   stop-color="#ffb0bc"/>
+                            <stop offset="55%"  stop-color="#ee7d92"/>
+                            <stop offset="100%" stop-color="#b8455e"/>
+                        </radialGradient>
+                        <radialGradient id="bunnyEyeShine" cx="35%" cy="30%" r="60%">
+                            <stop offset="0%"  stop-color="#fff" stop-opacity="0.95"/>
+                            <stop offset="60%" stop-color="#fff" stop-opacity="0"/>
+                        </radialGradient>
+                    </defs>
+
+                    <!-- Hind paws tucked behind the body -->
+                    <ellipse class="mascot-paw" cx="32" cy="118" rx="16" ry="7"
+                             fill="url(#bunnyBody)" stroke="rgba(180,110,130,0.3)" stroke-width="0.7"/>
+                    <ellipse class="mascot-paw" cx="108" cy="118" rx="16" ry="7"
+                             fill="url(#bunnyBody)" stroke="rgba(180,110,130,0.3)" stroke-width="0.7"/>
+
+                    <!-- LEFT EAR (long, upright, soft tip) -->
+                    <g class="mascot-ear mascot-ear-left">
+                        <path d="M 42,46 C 34,28 32,8 44,4 C 54,6 56,28 52,46 Z"
+                              fill="url(#bunnyBody)"
+                              stroke="rgba(180,110,130,0.36)" stroke-width="0.7"/>
+                        <path d="M 45,42 C 41,28 41,12 46,8 C 51,12 51,28 49,42 Z"
+                              fill="url(#bunnyInnerEar)" opacity="0.92"/>
+                    </g>
+
+                    <!-- RIGHT EAR -->
+                    <g class="mascot-ear mascot-ear-right">
+                        <path d="M 98,46 C 106,28 108,8 96,4 C 86,6 84,28 88,46 Z"
+                              fill="url(#bunnyBody)"
+                              stroke="rgba(180,110,130,0.36)" stroke-width="0.7"/>
+                        <path d="M 95,42 C 99,28 99,12 94,8 C 89,12 89,28 91,42 Z"
+                              fill="url(#bunnyInnerEar)" opacity="0.92"/>
+                    </g>
+
+                    <!-- BODY: round, slightly egg-shaped, head + body merged for cosiness -->
+                    <ellipse class="mascot-body" cx="70" cy="82" rx="44" ry="38"
+                             fill="url(#bunnyBody)"
+                             stroke="rgba(180,110,130,0.32)" stroke-width="1"/>
+
+                    <!-- Soft cream belly highlight -->
+                    <ellipse cx="64" cy="94" rx="24" ry="14" fill="url(#bunnyBelly)"/>
+
+                    <!-- Front paws resting in front of the body -->
+                    <ellipse class="mascot-paw" cx="46" cy="112" rx="10" ry="6"
+                             fill="url(#bunnyBody)"
+                             stroke="rgba(180,110,130,0.32)" stroke-width="0.7"/>
+                    <ellipse class="mascot-paw" cx="94" cy="112" rx="10" ry="6"
+                             fill="url(#bunnyBody)"
+                             stroke="rgba(180,110,130,0.32)" stroke-width="0.7"/>
+
+                    <!-- Rosy cheek blushes -->
+                    <ellipse class="mascot-cheek" cx="44" cy="84" rx="7" ry="5"
+                             fill="url(#bunnyCheek)"/>
+                    <ellipse class="mascot-cheek" cx="92" cy="84" rx="7" ry="5"
+                             fill="url(#bunnyCheek)"/>
+
+                    <!-- Eyes (big and gentle, blink together) -->
+                    <g class="mascot-eyes">
+                        <g class="mascot-eye mascot-eye-left">
+                            <ellipse cx="56" cy="72" rx="4.5" ry="6.5" fill="#3a2438"/>
+                            <ellipse cx="56" cy="72" rx="4.5" ry="6.5" fill="url(#bunnyEyeShine)"/>
+                            <circle  cx="57.5" cy="69" r="1.5" fill="#fff"/>
+                            <circle  cx="55"   cy="74" r="0.7" fill="#fff" opacity="0.85"/>
+                        </g>
+                        <g class="mascot-eye mascot-eye-right">
+                            <ellipse cx="80" cy="72" rx="4.5" ry="6.5" fill="#3a2438"/>
+                            <ellipse cx="80" cy="72" rx="4.5" ry="6.5" fill="url(#bunnyEyeShine)"/>
+                            <circle  cx="81.5" cy="69" r="1.5" fill="#fff"/>
+                            <circle  cx="79"   cy="74" r="0.7" fill="#fff" opacity="0.85"/>
+                        </g>
+                    </g>
+
+                    <!-- Pink rounded triangle nose -->
+                    <path d="M 64,82 Q 68,80 72,82 Q 70.5,87 68,87.5 Q 65.5,87 64,82 Z"
+                          fill="url(#bunnyNose)"
+                          stroke="rgba(160,60,80,0.45)" stroke-width="0.5"/>
+
+                    <!-- Tiny mouth: small Y under the nose -->
+                    <path d="M 68,87.5 L 68,90.5
+                             M 68,90.5 Q 65,92.5 63.5,91
+                             M 68,90.5 Q 71,92.5 72.5,91"
+                          stroke="#5a2b3e" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+
+                    <!-- Subtle whiskers (3 per side) -->
+                    <g class="mascot-whiskers"
+                       stroke="rgba(120,80,90,0.4)" stroke-width="0.7"
+                       stroke-linecap="round" fill="none">
+                        <path d="M 38,86 Q 30,84 22,86"/>
+                        <path d="M 38,89 Q 30,90 22,91"/>
+                        <path d="M 38,92 Q 31,93 24,95"/>
+                        <path d="M 98,86 Q 106,84 114,86"/>
+                        <path d="M 98,89 Q 106,90 114,91"/>
+                        <path d="M 98,92 Q 105,93 112,95"/>
+                    </g>
+                </svg>
+            </div>
+            <div class="chat-mascot-typing">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+
         <!-- Chat Messages Area -->
         <div class="chat-messages" id="chatMessages">
             <!-- Welcome Message -->
             <div class="message bot-message welcome-message">
                 <div class="message-avatar">
-                    <div class="avatar-icon">🤖</div>
+                    <div class="avatar-icon">SS</div>
                 </div>
                 <div class="message-content">
                     <div class="message-bubble">
@@ -54,18 +214,10 @@
 
             <!-- Quick Response Buttons -->
             <div class="quick-responses">
-                <button class="quick-response-btn" data-response="I'm feeling anxious">
-                    😰 I'm feeling anxious
-                </button>
-                <button class="quick-response-btn" data-response="I need help calming down">
-                    🧘 I need help calming down
-                </button>
-                <button class="quick-response-btn" data-response="I'm having a panic attack">
-                    😵 I'm having a panic attack
-                </button>
-                <button class="quick-response-btn" data-response="I just want to talk">
-                    💬 I just want to talk
-                </button>
+                <button class="quick-response-btn" data-response="I'm feeling anxious">I'm feeling anxious</button>
+                <button class="quick-response-btn" data-response="I need help calming down">I need help calming down</button>
+                <button class="quick-response-btn" data-response="I'm having a panic attack">I'm having a panic attack</button>
+                <button class="quick-response-btn" data-response="I just want to talk">I just want to talk</button>
             </div>
         </div>
 
@@ -93,13 +245,12 @@
 
     <!-- Dashboard Container (Hidden when chat is open) -->
     <div class="dashboard-container" id="dashboardContainer">
+        <div class="ghibli-bg-slot" data-ghibli-scope="dashboard"></div>
         <!-- Header -->
         <header class="dashboard-header">
             <div class="header-content">
-                <div class="title-brand">
-                    <img src="lotus-logo.svg" alt="" class="title-lotus" aria-hidden="true">
-                    <h1 class="app-title">SafeSpace AI</h1>
-                </div>
+                <svg class="title-lotus" id="titleLotus" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+                <h1 class="app-title">SafeSpace AI</h1>
                 <p class="app-subtitle">Your mindful companion for anxiety support</p>
             </div>
         </header>
@@ -111,29 +262,22 @@
                 <div class="dashboard-card welcome-card">
                     <div class="card-header">
                         <h2>Welcome Back</h2>
-                        <div class="mood-indicator">
-                            <span class="mood-text">How are you feeling today?</span>
-                            <div class="mood-meter">
-                                <div class="mood-meter-header">
-                                    <span class="mood-level-label" id="moodLevelLabel">Happy</span>
-                                </div>
-                                <input
-                                    type="range"
-                                    id="moodSlider"
-                                    class="mood-slider"
-                                    min="0"
-                                    max="4"
-                                    step="1"
-                                    value="0"
-                                    aria-label="Mood intensity meter from happy to not ok"
-                                >
-                                <div class="mood-scale-labels" aria-hidden="true">
-                                    <span>Happy</span>
-                                    <span>Neutral</span>
-                                    <span>Anxious</span>
-                                    <span>Uneasy</span>
-                                    <span>Not OK</span>
-                                </div>
+                    </div>
+                    <div class="mood-indicator">
+                        <span class="mood-text">How are you feeling today?</span>
+                        <div class="mood-slider" id="moodSlider">
+                            <div class="mood-emoji-row" id="moodEmojiRow">
+                                <span class="mood-emoji" data-idx="0" data-mood="overwhelmed" style="left: 0%">😞</span>
+                                <span class="mood-emoji" data-idx="1" data-mood="anxious"     style="left: 25%">🙁</span>
+                                <span class="mood-emoji" data-idx="2" data-mood="okay"        style="left: 50%">😐</span>
+                                <span class="mood-emoji" data-idx="3" data-mood="good"        style="left: 75%">🙂</span>
+                                <span class="mood-emoji" data-idx="4" data-mood="great"       style="left: 100%">😄</span>
+                            </div>
+                            <div class="mood-track-wrap">
+                                <div class="mood-track-fill" id="moodTrackFill"></div>
+                                <input type="range" min="0" max="4" step="1" value="2"
+                                       class="mood-range" id="moodRange"
+                                       aria-label="How are you feeling?">
                             </div>
                         </div>
                     </div>
@@ -146,18 +290,25 @@
                     </div>
                     <div class="action-buttons">
                         <button class="action-btn primary" id="startChatBtn">
-                            <span class="btn-icon">💬</span>
-                            <span class="btn-text">Let's Talk</span>
-                        </button>
-                        <button class="action-btn secondary" id="breathingExerciseBtn">
-                            <span class="btn-icon">🧘</span>
-                            <span class="btn-text">Breathing Exercise</span>
-                        </button>
-                        <button class="action-btn secondary" id="calmingMusicBtn">
-                            <span class="btn-icon">🎵</span>
-                            <span class="btn-text">Music Therapy</span>
+                            <span class="btn-icon btn-icon-chat" aria-hidden="true"></span>
+                            <span class="btn-text">Start Chat</span>
                         </button>
                     </div>
+                </div>
+
+                <!-- Breathing Visualizer -->
+                <div class="dashboard-card progress-card">
+                    <div class="card-header">
+                        <h2>Breathing Visualizer</h2>
+                    </div>
+                    <button class="lotus-btn" id="breathingExerciseBtn" type="button" aria-label="Start breathing exercise">
+                        <span class="lotus-stage">
+                            <span class="lotus-bloom" aria-hidden="true"></span>
+                            <svg class="lotus" id="lotusSvg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+                            <span class="lotus-shimmer" aria-hidden="true"></span>
+                        </span>
+                        <span class="lotus-label">Breathe</span>
+                    </button>
                 </div>
 
                 <!-- Recent Activity -->
@@ -197,15 +348,44 @@
                     </div>
                     <div class="resource-links">
                         <a href="#" class="resource-link">
-                            <span class="resource-icon">📚</span>
+                            <span class="resource-icon resource-icon-guide" aria-hidden="true"></span>
                             <span class="resource-text">Anxiety Management Guide</span>
                         </a>
+                        <a href="#" class="resource-link">
+                            <span class="resource-icon resource-icon-sound" aria-hidden="true"></span>
+                            <span class="resource-text">Calming Sounds</span>
+                        </a>
                     </div>
-                    <div class="emergency-support">
-                        <h3>Emergency Support</h3>
-                        <p class="emergency-text">If you're having a crisis, please reach out:</p>
+                    <!-- Floating SoundCloud Widget -->
+                    <div id="floating-player" class="floating-player hidden">
+                        <div id="floating-header" class="floating-header">
+                            <span>Calming Sounds</span>
+                            <button id="floating-close">✕</button>
+                        </div>
+                        <div id="soundcloud-container"></div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card affirmations-card">
+                    <div class="card-header">
+                        <h2>Daily Affirmations</h2>
+                    </div>
+                    <div class="affirmation-list" id="affirmationList" aria-live="polite">
+                        <div class="affirmation-item">I am capable of finding peace.</div>
+                        <div class="affirmation-item">My feelings are valid.</div>
+                        <div class="affirmation-item">I have the strength to navigate this day.</div>
+                    </div>
+                </div>
+
+                <!-- Emergency Support -->
+                <div class="dashboard-card emergency-card">
+                    <div class="card-header">
+                        <h2>Emergency Support</h2>
+                    </div>
+                    <div class="emergency-content">
+                        <p class="emergency-text">If you're having a crisis, please reach out.</p>
                         <div class="emergency-contacts">
-                            <a href="tel:988" class="emergency-btn">988 Suicide & Crisis Lifeline</a>
+                            <a href="tel:988" class="emergency-btn">988 Suicide &amp; Crisis Lifeline</a>
                             <a href="tel:1-800-273-8255" class="emergency-btn">National Suicide Prevention Lifeline</a>
                         </div>
                     </div>
@@ -224,6 +404,7 @@
 
     <div class="breathing-modal" id="breathingModal" aria-hidden="true">
         <div class="breathing-panel" role="dialog" aria-modal="true" aria-labelledby="breathingTitle">
+            <div class="ghibli-bg-slot" data-ghibli-scope="modal"></div>
             <button class="breathing-close" id="breathingCloseBtn" aria-label="Close breathing exercise">x</button>
             <div class="breathing-panel-header">
                 <p class="breathing-eyebrow">Guided reset</p>
@@ -262,5 +443,6 @@
     <script src="music.js"></script>
     <script src="script.js"></script>
     <script src="chat.js"></script>
+    </div>
 </body>
 </html>

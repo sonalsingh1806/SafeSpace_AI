@@ -30,7 +30,7 @@ class ChatInterface {
         this.breathingState = {
             phases: [
                 { key: 'inhale', label: 'Inhale', seconds: 4, progress: 0 },
-                { key: 'hold-1', label: 'Hold', seconds: 4, progress: 0.25 },
+                { key: 'hold-1', label: 'Hold', seconds: 4, progress: 0.26 },
                 { key: 'exhale', label: 'Exhale', seconds: 4, progress: 0.5 },
                 { key: 'hold-2', label: 'Hold', seconds: 4, progress: 0.75 }
             ],
