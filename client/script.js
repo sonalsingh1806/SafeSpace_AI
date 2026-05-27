@@ -820,6 +820,28 @@ function setupEventListeners() {
             handleResourceClick(this);
         });
     });
+
+    // Emergency buttons — copy number to clipboard (tel: handles mobile dialer naturally)
+    document.querySelectorAll('.emergency-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            // Extract digits from the href (tel:988 → "988", tel:1-800-273-8255 → "18002738255")
+            const href = this.getAttribute('href') || '';
+            const number = href.replace('tel:', '');
+            if (!number) return;
+
+            // On desktop navigator.clipboard copies; on mobile tel: still opens the dialer
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                e.preventDefault(); // stop silent desktop no-op; mobile keeps dialer via tel:
+                navigator.clipboard.writeText(number).then(() => {
+                    showCallToast(this, number);
+                }).catch(() => {
+                    // Clipboard blocked — fall back to letting tel: fire
+                    window.location.href = href;
+                });
+            }
+            // If clipboard API unavailable, tel: fires as-is
+        });
+    });
 }
 
 const MOODS = [
@@ -1033,6 +1055,44 @@ function handleResourceClick(link) {
     setTimeout(() => {
         showNotification(`${resourceText} loaded 📚`, 'success');
     }, 1000);
+}
+
+function showCallToast(anchorEl, number) {
+    // Remove any existing toast
+    const old = document.getElementById('call-toast');
+    if (old) old.remove();
+
+    const toast = document.createElement('div');
+    toast.id = 'call-toast';
+    toast.textContent = `📋 ${number} copied — dial it on your phone`;
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #3e2723;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 24px;
+        font-size: 0.82rem;
+        font-weight: 500;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+        z-index: 9999;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+    `;
+    document.body.appendChild(toast);
+
+    // Fade in, then fade out after 2.5 s
+    requestAnimationFrame(() => {
+        toast.style.opacity = '1';
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 220);
+        }, 2500);
+    });
 }
 
 function showNotification(message, type = 'info') {

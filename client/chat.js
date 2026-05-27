@@ -663,15 +663,18 @@ class ChatInterface {
             const section = document.createElement('div');
             section.className = `harness-section ${def.cls}`;
 
+            const p = document.createElement('p');
+
             if (def.label) {
                 const label = document.createElement('span');
                 label.className = 'harness-label';
-                label.textContent = def.label;
-                section.appendChild(label);
+                label.textContent = def.label + ' ';
+                p.appendChild(label);
+                p.appendChild(document.createTextNode(text));
+            } else {
+                p.textContent = def.prefix ? `${def.prefix}${text}` : text;
             }
 
-            const p = document.createElement('p');
-            p.textContent = def.prefix ? `${def.prefix}${text}` : text;
             section.appendChild(p);
 
             bubble.appendChild(section);
@@ -681,6 +684,12 @@ class ChatInterface {
             const p = document.createElement('p');
             p.textContent = "I'm here for you.";
             bubble.appendChild(p);
+        }
+
+        // Tool suggestion buttons (breathing / music) when model recommends them
+        const suggest = Array.isArray(sections.suggest) ? sections.suggest : [];
+        if (suggest.length > 0 && safetyLevel !== 'crisis') {
+            bubble.appendChild(this._buildToolSuggestions(suggest));
         }
 
         const messageTime = document.createElement('div');
@@ -742,6 +751,55 @@ class ChatInterface {
             </span>
         `;
         this.chatMessages.appendChild(nudge);
+    }
+
+    /** Builds the tool-suggestion strip shown inside a bot bubble. */
+    _buildToolSuggestions(suggest) {
+        const TOOLS = {
+            breathing: {
+                icon:  '🫁',
+                label: 'Try Breathing Exercise',
+                action: () => {
+                    // Open the breathing modal — works whether we're in chat or dashboard
+                    if (typeof window.chatInterface?.openBreathingExercise === 'function') {
+                        window.chatInterface.openBreathingExercise();
+                    } else {
+                        document.getElementById('breathingExerciseBtn')?.click();
+                    }
+                },
+            },
+            music: {
+                icon:  '🎵',
+                label: 'Open Music Player',
+                action: () => {
+                    if (typeof window.toggleSoundCloudWidget === 'function') {
+                        window.toggleSoundCloudWidget();
+                    }
+                },
+            },
+        };
+
+        const strip = document.createElement('div');
+        strip.className = 'harness-tool-suggest';
+
+        const intro = document.createElement('span');
+        intro.className = 'harness-tool-suggest-intro';
+        intro.textContent = 'Helpful right now:';
+        strip.appendChild(intro);
+
+        suggest.forEach(key => {
+            const tool = TOOLS[key];
+            if (!tool) return;
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'harness-tool-btn';
+            btn.innerHTML = `<span class="harness-tool-icon">${tool.icon}</span>${tool.label}`;
+            btn.addEventListener('click', tool.action);
+            strip.appendChild(btn);
+        });
+
+        return strip;
     }
 
     addMessage(content, sender) {

@@ -432,6 +432,17 @@
     font-style: italic;
 }
 
+/* Disclaimer bar below input */
+.chat-disclaimer {
+    margin: 8px auto 0;
+    max-width: 800px;
+    text-align: center;
+    font-size: 0.73rem;
+    color: rgba(90, 70, 60, 0.55);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+}
+
 /* Response Harness */
 .response-harness {
     display: flex;
@@ -448,40 +459,47 @@
 }
 
 .harness-section {
-    padding: 14px 18px;
+    padding: 3px 18px;
+}
+
+.harness-section:first-child {
+    padding-top: 14px;
+}
+
+.harness-section:last-child {
+    padding-bottom: 14px;
 }
 
 .harness-section p {
     margin: 0;
-    line-height: 1.65;
+    line-height: 1.7;
     font-size: 0.95rem;
     color: var(--dark-gray);
     white-space: pre-wrap;
 }
 
+/* Sections flow as natural paragraphs — no boxes, no hard borders */
 .harness-acknowledge {
-    background: var(--soft-white);
-    border-radius: 18px 18px 4px 4px;
-    border: 1px solid var(--medium-gray);
+    background: none;
+    border: none;
+    border-radius: 0;
 }
 
 .harness-acknowledge p {
-    font-size: 1rem;
+    font-size: 0.97rem;
 }
 
 .harness-explore {
-    background: var(--warm-gray);
-    border-left: 1px solid var(--medium-gray);
-    border-right: 1px solid var(--medium-gray);
-    border-bottom: 1px solid var(--medium-gray);
+    background: none;
+    border: none;
 }
 
+/* Reframe: only a faint left accent — feels like a thoughtful aside */
 .harness-reframe {
-    border-left: 3px solid var(--lavender-400);
-    border-right: 1px solid var(--medium-gray);
-    border-bottom: 1px solid var(--medium-gray);
-    background: rgba(159, 121, 222, 0.06);
-    padding-left: 16px;
+    border-left: 2px solid rgba(159, 121, 222, 0.28);
+    background: none;
+    padding-left: 14px;
+    margin: 2px 0;
 }
 
 .harness-reframe p {
@@ -489,69 +507,69 @@
     font-style: italic;
 }
 
+/* Try-this: a very soft tinted strip — action-oriented but not aggressive */
 .harness-try {
-    background: rgba(127, 176, 105, 0.1);
-    border: 1px solid rgba(127, 176, 105, 0.25);
-    border-radius: 4px 4px 4px 4px;
+    background: rgba(127, 176, 105, 0.07);
+    border: none;
+    border-left: 2px solid rgba(127, 176, 105, 0.35);
+    border-radius: 0 6px 6px 0;
+    margin: 4px 0;
+    padding: 8px 18px;
 }
 
 .harness-label {
-    display: block;
-    font-size: 0.72rem;
+    display: inline;
+    font-size: 0.78rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     color: var(--accent-green);
-    margin-bottom: 5px;
+    margin-right: 6px;
 }
 
+/* Question flows as a natural closer — italic, no box */
 .harness-question {
-    background: var(--soft-white);
-    border-radius: 4px 4px 18px 18px;
-    border: 1px solid var(--medium-gray);
-    border-top: none;
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding-bottom: 16px;
 }
 
 .harness-question p {
     font-style: italic;
     color: var(--text-gray);
-}
-
-/* when reframe is absent, round the try section's top corners */
-.harness-explore + .harness-try,
-.harness-reframe + .harness-try {
-    border-radius: 0;
+    opacity: 0.9;
 }
 
 /* ── Safety: crisis & support harness variants ──────────────────────────── */
 .response-harness--crisis {
     border-left: 4px solid #e07a8a;
     border-radius: 18px;
+    padding-left: 2px;
 }
 
-.response-harness--crisis .harness-acknowledge {
-    background: #fff5f6;
-    border-color: #f5ccd2;
-}
-
-.response-harness--crisis .harness-explore {
-    background: #fff5f6;
-    border-color: #f5ccd2;
+/* Crisis sections: keep the same flowing layout, just tint the reframe accent */
+.response-harness--crisis .harness-reframe {
+    border-left-color: rgba(224, 122, 138, 0.5);
 }
 
 .harness-try--crisis {
-    background: rgba(224, 122, 138, 0.1);
-    border: 1px solid rgba(224, 122, 138, 0.3);
-    border-radius: 4px;
+    background: rgba(224, 122, 138, 0.07);
+    border-left-color: rgba(224, 122, 138, 0.45);
 }
 
 .harness-try--crisis .harness-label {
     color: #c0384d;
-    font-size: 0.75rem;
 }
 
 .response-harness--support {
     border-left: 3px solid #6f9fc0;
+    border-radius: 18px;
+    padding-left: 2px;
+}
+
+.response-harness--support .harness-reframe {
+    border-left-color: rgba(111, 159, 192, 0.45);
 }
 
 /* ── Crisis resource card ─────────────────────────────────────────────────── */
@@ -670,6 +688,59 @@
 
 .support-nudge-link:hover {
     text-decoration: underline;
+}
+
+/* ── Tool suggestion strip (inside bot bubble) ────────────────────────────── */
+.harness-tool-suggest {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 14px 12px;
+    border-top: 1px solid var(--medium-gray);
+    background: rgba(245, 240, 255, 0.45);
+    border-radius: 0 0 18px 18px;
+    margin-top: 2px;
+}
+
+.harness-tool-suggest-intro {
+    font-size: 0.75rem;
+    color: var(--text-gray);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    width: 100%;
+}
+
+.harness-tool-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(160,130,220,0.18), rgba(120,180,220,0.18));
+    color: var(--accent-purple);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(130,100,200,0.12);
+}
+
+.harness-tool-btn:hover {
+    background: linear-gradient(135deg, rgba(160,130,220,0.32), rgba(120,180,220,0.28));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(130,100,200,0.22);
+}
+
+.harness-tool-btn:active {
+    transform: translateY(0);
+}
+
+.harness-tool-icon {
+    font-size: 1rem;
+    line-height: 1;
 }
 
 /* Typing Indicator */
@@ -1162,47 +1233,6 @@
     }
 }
 
-.floating-player {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 350px;
-    height: 400px;
-    background: white;
-    border-radius: 18px;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.2);
-    z-index: 3000;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.floating-player.hidden {
-    display: none;
-}
-
-.floating-header {
-    background: var(--primary-sage);
-    color: #000;
-    padding: 12px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: grab;
-    font-weight: 500;
-}
-
-.floating-header button {
-    background: none;
-    border: none;
-    color: #000;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-#soundcloud-container {
-    flex: 1;
-}
 
 /* Cozy sanctuary chat overrides */
 .chat-container,
@@ -1213,7 +1243,6 @@
 .typing-dots,
 .quick-response-btn,
 .soundcloud-modal-content,
-.floating-player,
 .breathing-panel,
 .breathing-core,
 .breathing-phase-card,

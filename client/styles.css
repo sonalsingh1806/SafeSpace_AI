@@ -128,44 +128,20 @@ body {
 }
 
 .app-title {
-    font-family: 'SKAY', 'Baloo 2', 'Fredoka', 'Arial Rounded MT Bold', 'Quicksand', sans-serif !important;
-    font-size: clamp(1.7rem, 3.2vw, 2.35rem) !important;
-    font-weight: 900 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.08em !important;
-
-    /* ── Cloud colour: bright white on top, soft sky-blue beneath ── */
-    background: linear-gradient(175deg,
-        #ffffff   0%,
-        #eef7ff  30%,
-        #cce8ff  65%,
-        #a8d4f8 100%) !important;
+    font-family: 'Quicksand', sans-serif !important;
+    font-size: clamp(1.6rem, 3vw, 2.2rem) !important;
+    font-weight: 700 !important;
+    background: linear-gradient(135deg, #a23a2e 0%, #c84d36 22%, #e87248 48%, #d35a78 75%, #7a4ea5 100%) !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
-    -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.85) !important;
     color: transparent !important;
-
-    /* ── Fluffy cloud puff ──
-       Layer 1–2 : tight white bloom right around each letter
-       Layer 3–4 : mid soft sky-blue halo for the airy glow
-       Layer 5–8 : directional white puffs in four directions → puffy edges
-       Layer 9   : wide dreamy sky-blue atmosphere
-       Layer 10  : gentle underside shadow so the cloud "floats"        */
     filter:
-        drop-shadow(0  0  4px rgba(255, 255, 255, 1.0))
-        drop-shadow(0  0 10px rgba(255, 255, 255, 0.95))
-        drop-shadow(0  0 18px rgba(210, 238, 255, 0.88))
-        drop-shadow(0  0 30px rgba(170, 220, 255, 0.70))
-        drop-shadow( 4px  0 10px rgba(255, 255, 255, 0.75))
-        drop-shadow(-4px  0 10px rgba(255, 255, 255, 0.75))
-        drop-shadow( 0 -4px  8px rgba(255, 255, 255, 0.72))
-        drop-shadow( 0  4px  8px rgba(255, 255, 255, 0.60))
-        drop-shadow( 0  0  50px rgba(140, 200, 255, 0.45))
-        drop-shadow( 0  6px 14px rgba(100, 170, 230, 0.30)) !important;
-
+    drop-shadow(0 1px 0 rgba(255,255,255,0.85))
+    drop-shadow(0 2px 6px rgba(120,40,40,0.35))
+    drop-shadow(0 0 22px rgba(255,180,130,0.6)) !important;
     margin: 0 !important;
-    line-height: 1;
+    line-height: 1.1;
 }
 
 .app-subtitle {
@@ -240,7 +216,7 @@ body {
         "breathaff  chat"
         "resources  emergency";
     grid-template-columns: 1fr 1.25fr;
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: auto auto auto;
     gap: 12px;
     width: 100%;
     align-items: start;
@@ -249,7 +225,7 @@ body {
 .dashboard-card {
     background: rgba(255, 248, 220, 0.82);
     border-radius: 18px;
-    padding: 16px 18px;
+    padding: 12px 14px;
     box-shadow: 0 14px 32px rgba(171, 132, 74, 0.25), 0 2px 8px rgba(255,220,170,0.35);
     border: 1px solid rgba(255,230,190,0.55);
     backdrop-filter: blur(10px);
@@ -523,6 +499,10 @@ body {
    ============================================================ */
 .resources-card {
     grid-area: resources;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 .resource-links {
@@ -703,12 +683,45 @@ body {
     transform: translateY(-1px);
 }
 
-.chat-preview-input-row {
+.chat-open-btn {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
+    width: 100%;
     margin-top: auto;
+    padding: 14px 24px;
+    border-radius: 999px;
+    border: none;
+    background: linear-gradient(135deg, #a07ccf 0%, #7b5ea7 50%, #5c4491 100%);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(100,70,180,0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+.chat-open-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(100,70,180,0.48);
+}
+
+.chat-open-btn:active {
+    transform: translateY(0);
+}
+
+.chat-open-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: white;
+    flex-shrink: 0;
+}
+
+/* keep the old input-row styles in case referenced elsewhere — hidden */
+.chat-preview-input-row { display: none; }
 
 .chat-preview-input {
     flex: 1;
@@ -766,6 +779,10 @@ body {
    ============================================================ */
 .emergency-card {
     grid-area: emergency;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     padding: 11px 13px;
     background: rgba(255, 252, 248, 0.6) !important;
     border: 1px solid rgba(200, 185, 175, 0.35) !important;
@@ -1133,35 +1150,92 @@ body {
 .affirmation-list { display: none; }
 
 /* ============================================================
-   FLOATING PLAYER
+   HEALING SOUNDS — bunny CTA + floating popup player
    ============================================================ */
-.floating-player {
-    position: fixed !important;
+
+/* ── Bunny button (inline card content) ─────────────────────── */
+.sounds-bunny-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    flex: 1;
+    padding: 6px 10px 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 14px;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.sounds-bunny-btn:hover {
+    background: rgba(160,120,220,0.07);
+    transform: translateY(-2px);
+}
+
+.sounds-bunny-btn.active .sounds-bunny-svg {
+    filter:
+        drop-shadow(0 0 10px rgba(155,124,212,0.55))
+        drop-shadow(0 0 22px rgba(155,124,212,0.28));
+}
+
+.sounds-bunny-svg {
+    width: 82px;
+    height: 82px;
+    animation: sb-float 4.5s ease-in-out infinite;
+    filter: drop-shadow(0 4px 10px rgba(150,80,120,0.2));
+}
+
+@keyframes sb-float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-5px); }
+}
+
+/* Floating music notes inside the SVG */
+.sb-note { animation: sb-note-rise 3s ease-in-out infinite; }
+.sb-note-1 { animation-delay: 0s; }
+.sb-note-2 { animation-delay: 1s; }
+.sb-note-3 { animation-delay: 2s; }
+
+@keyframes sb-note-rise {
+    0%   { opacity: 0;   transform: translateY(0); }
+    20%  { opacity: 0.8; }
+    80%  { opacity: 0.5; }
+    100% { opacity: 0;   transform: translateY(-14px); }
+}
+
+.sounds-bunny-hint {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #8a6a80;
+    letter-spacing: 0.02em;
+    font-family: inherit;
+}
+
+/* ── Player shell: hidden by default, fixed when .open ───────── */
+.sounds-player-shell {
+    display: none;
+}
+
+.sounds-player-shell.open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
     bottom: 20px;
     right: 20px;
-    z-index: 50;
-    width: 340px;
-    background: rgba(255,248,232,0.92) !important;
-    border: 1px solid rgba(255,220,180,0.5) !important;
-    border-radius: 18px !important;
-    box-shadow: 0 12px 30px rgba(100,60,30,0.25) !important;
+    width: 350px;
+    border-radius: 18px;
+    z-index: 3000;
+    background: rgba(255,248,232,0.97);
+    border: 1px solid rgba(220,195,165,0.55);
+    box-shadow: 0 16px 44px rgba(100,60,30,0.28);
     overflow: hidden;
 }
 
-#soundcloud-container {
-    width: 100%;
-    height: 166px; /* minimum height SoundCloud non-visual player needs */
-    overflow: hidden;
-    transition: height 0.3s ease;
-}
-
-.floating-player.collapsed #soundcloud-container {
-    height: 0;
-}
-
-.floating-player.hidden { display: none; }
-
-.floating-header {
+/* ── Float header ───────────────────────────────────────────── */
+.sounds-float-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1170,27 +1244,21 @@ body {
     font-size: 0.88rem;
     color: #3e2723;
     border-bottom: 1px solid rgba(220,195,165,0.4);
-    cursor: pointer;
+    cursor: default;
     user-select: none;
+    flex-shrink: 0;
 }
 
-/* Remove bottom border when collapsed so the header looks like a pill */
-.floating-player.collapsed .floating-header {
-    border-bottom-color: transparent;
-}
+.sounds-float-title { flex: 1; }
 
-.floating-title {
-    flex: 1;
-}
-
-.floating-header-btns {
+.sounds-float-btns {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-#floating-collapse,
-#floating-close {
+#soundsCollapseBtn,
+#soundsDockBtn {
     background: none;
     border: none;
     cursor: pointer;
@@ -1202,13 +1270,62 @@ body {
     transition: background 0.15s ease, transform 0.3s ease;
 }
 
-#floating-collapse:hover,
-#floating-close:hover {
-    background: rgba(180, 120, 80, 0.12);
+#soundsCollapseBtn:hover,
+#soundsDockBtn:hover { background: rgba(180,120,80,0.12); }
+
+/* ── Track selector bar (inside popup) ──────────────────────── */
+.sounds-track-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 8px 12px 6px;
+    flex-shrink: 0;
+    border-bottom: 1px solid rgba(220,195,165,0.3);
 }
 
-/* Flip chevron when collapsed */
-.floating-player.collapsed #floating-collapse {
+.sounds-track-btn {
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(160,120,80,0.28);
+    background: rgba(255,250,240,0.8);
+    color: #7a5a40;
+    font-size: 0.76rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+    white-space: nowrap;
+}
+
+.sounds-track-btn:hover {
+    background: rgba(160,120,80,0.1);
+    border-color: rgba(160,120,80,0.5);
+}
+
+.sounds-track-btn.active {
+    background: linear-gradient(135deg, rgba(140,100,60,0.22), rgba(180,140,90,0.18));
+    border-color: rgba(140,100,60,0.6);
+    color: #4a2e10;
+}
+
+/* ── YouTube iframe inside popup ────────────────────────────── */
+#soundcloud-container {
+    width: 100%;
+    height: 180px;
+    flex-shrink: 0;
+    background: #000;
+}
+
+/* ── Collapsed state ─────────────────────────────────────────── */
+.sounds-player-shell.open.collapsed #soundcloud-container,
+.sounds-player-shell.open.collapsed .sounds-track-bar { display: none; }
+
+.sounds-player-shell.open.collapsed .sounds-float-header {
+    border-bottom-color: transparent;
+    border-radius: 18px;
+}
+
+.sounds-player-shell.open.collapsed #soundsCollapseBtn {
     transform: rotate(180deg);
 }
 
@@ -1276,7 +1393,7 @@ body.is-calm-mood {
     max-width: 1200px !important;
     width: 100%;
     margin: 0 auto !important;
-    padding: 14px 20px 0 !important;
+    padding: 8px 20px 0 !important;
     display: flex;
     flex-direction: column;
     height: 100vh !important;
@@ -1286,7 +1403,7 @@ body.is-calm-mood {
 }
 
 .dashboard-header { flex: 0 0 auto; margin: 0 !important; padding: 0 !important; }
-.dashboard-main { flex: 1 1 auto; min-height: 0; display: flex; overflow: hidden; }
+.dashboard-main { flex: 1 1 auto; min-height: 0; display: flex; overflow: hidden; width: 100%; }
 
 /* Grid fills remaining vertical space */
 .dashboard-grid {
@@ -1296,10 +1413,12 @@ body.is-calm-mood {
         "breathaff  chat"
         "resources  emergency" !important;
     grid-template-columns: 1fr 1.28fr !important;
-    grid-template-rows: auto auto 1fr !important;
-    gap: 12px !important;
+    grid-template-rows: auto auto minmax(min-content, 185px) !important;
+    gap: 10px !important;
     width: 100%;
-    align-items: start;
+    height: 100% !important;
+    min-height: 0 !important;
+    align-items: stretch !important;
     overflow: hidden;
 }
 

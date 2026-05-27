@@ -211,7 +211,6 @@
             <div class="quick-responses">
                 <button class="quick-response-btn" data-response="I'm feeling anxious">I'm feeling anxious</button>
                 <button class="quick-response-btn" data-response="I need help calming down">I need help calming down</button>
-                <button class="quick-response-btn" data-response="I'm having a panic attack">I'm having a panic attack</button>
                 <button class="quick-response-btn" data-response="I just want to talk">I just want to talk</button>
             </div>
         </div>
@@ -235,6 +234,7 @@
                 </div>
                 <div class="voice-status" id="voiceStatus" aria-live="polite"></div>
             </div>
+            <p class="chat-disclaimer">🔒 This is a safe space — your conversations are private, never stored, and this is a supportive tool, not a therapist.</p>
         </div>
     </div>
 
@@ -249,7 +249,6 @@
                     <svg class="title-lotus header-logo-icon" id="titleLotus" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:relative;opacity:1;transform:none;filter:none;animation:none;width:52px;height:52px;"></svg>
                     <div class="header-title-group">
                         <h1 class="app-title">SafeSpace AI</h1>
-                        <p class="app-subtitle">Your mindful companion for anxiety support</p>
                     </div>
                 </div>
             </div>
@@ -308,7 +307,7 @@
                                     <span class="btn-text">Start Chat</span>
                                 </button>
                                 <button class="action-btn primary" onclick="document.getElementById('breathingExerciseBtn').click()" style="font-size:0.82rem;padding:7px 14px;">
-                                    Start Breathing
+                                    A Quick Breathing Exercise !
                                 </button>
                             </div>
                         </div>
@@ -316,27 +315,72 @@
                 </div>
 
                 <!-- ── RESOURCES CARD (left col, row 3) ── -->
-                <div class="dashboard-card resources-card">
+                <div class="dashboard-card resources-card" id="soundsCard">
                     <div class="card-header">
                         <h2>Healing Sounds</h2>
                     </div>
-                    <div class="resource-links">
-                        <a href="#" class="resource-link" id="calmingSoundsLink">
-                            <div class="resource-icon-wrap">🎵</div>
-                            <div class="resource-text-group">
-                                <span class="resource-text">Calming Sounds</span>
-                                <span class="resource-sub">Peaceful audio to help you relax</span>
-                            </div>
-                            <span class="resource-chevron">›</span>
-                        </a>
-                    </div>
-                    <!-- Floating SoundCloud Widget -->
-                    <div id="floating-player" class="floating-player hidden">
-                        <div id="floating-header" class="floating-header">
-                            <span class="floating-title">🎵 Music Therapy</span>
-                            <div class="floating-header-btns">
-                                <button id="floating-collapse" aria-label="Collapse player" title="Collapse">▾</button>
-                                <button id="floating-close" aria-label="Close player" title="Close">✕</button>
+
+                    <!-- Bunny mascot — click to open player popup -->
+                    <button class="sounds-bunny-btn" id="soundsBunnyBtn" aria-label="Open music player">
+                        <svg class="sounds-bunny-svg" viewBox="0 0 140 152" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <defs>
+                                <radialGradient id="sbBody" cx="38%" cy="34%" r="78%">
+                                    <stop offset="0%"   stop-color="#fff7e8"/>
+                                    <stop offset="40%"  stop-color="#ffe2cd"/>
+                                    <stop offset="78%"  stop-color="#f5bcb8"/>
+                                    <stop offset="100%" stop-color="#d895a4"/>
+                                </radialGradient>
+                                <linearGradient id="sbEar" x1="50%" y1="100%" x2="50%" y2="0%">
+                                    <stop offset="0%"   stop-color="#f29ab2"/>
+                                    <stop offset="100%" stop-color="#ffe1d4"/>
+                                </linearGradient>
+                                <radialGradient id="sbCheek" cx="50%" cy="50%" r="55%">
+                                    <stop offset="0%"   stop-color="rgba(255,154,178,0.72)"/>
+                                    <stop offset="100%" stop-color="rgba(255,154,178,0)"/>
+                                </radialGradient>
+                            </defs>
+                            <!-- Ears -->
+                            <path d="M 42,56 C 34,38 32,18 44,14 C 54,16 56,38 52,56 Z" fill="url(#sbBody)" stroke="rgba(180,110,130,0.3)" stroke-width="0.7"/>
+                            <path d="M 45,52 C 41,38 41,22 46,18 C 51,22 51,38 49,52 Z" fill="url(#sbEar)" opacity="0.92"/>
+                            <path d="M 98,56 C 106,38 108,18 96,14 C 86,16 84,38 88,56 Z" fill="url(#sbBody)" stroke="rgba(180,110,130,0.3)" stroke-width="0.7"/>
+                            <path d="M 95,52 C 99,38 99,22 94,18 C 89,22 89,38 91,52 Z" fill="url(#sbEar)" opacity="0.92"/>
+                            <!-- Headphone band -->
+                            <path d="M 28,72 Q 70,44 112,72" stroke="#7b5ea7" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+                            <!-- Left cup -->
+                            <ellipse cx="25" cy="78" rx="10" ry="12" fill="#b090d8"/>
+                            <ellipse cx="25" cy="78" rx="6"  ry="8"  fill="#7b5ea7"/>
+                            <!-- Right cup -->
+                            <ellipse cx="115" cy="78" rx="10" ry="12" fill="#b090d8"/>
+                            <ellipse cx="115" cy="78" rx="6"  ry="8"  fill="#7b5ea7"/>
+                            <!-- Body -->
+                            <ellipse cx="70" cy="108" rx="44" ry="36" fill="url(#sbBody)" stroke="rgba(180,110,130,0.22)" stroke-width="1"/>
+                            <!-- Belly -->
+                            <ellipse cx="66" cy="118" rx="22" ry="13" fill="rgba(255,250,232,0.65)"/>
+                            <!-- Cheeks -->
+                            <ellipse cx="44" cy="108" rx="8" ry="6" fill="url(#sbCheek)"/>
+                            <ellipse cx="92" cy="108" rx="8" ry="6" fill="url(#sbCheek)"/>
+                            <!-- Happy squint eyes -->
+                            <path d="M 51,92 Q 56,88 61,92" stroke="#3a2438" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                            <path d="M 75,92 Q 80,88 85,92" stroke="#3a2438" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                            <!-- Nose -->
+                            <ellipse cx="70" cy="100" rx="3.5" ry="2.5" fill="#ee7d92" stroke="rgba(160,60,80,0.4)" stroke-width="0.5"/>
+                            <!-- Smile -->
+                            <path d="M 62,106 Q 70,114 78,106" stroke="#5a2b3e" stroke-width="1.5" fill="rgba(238,125,146,0.25)" stroke-linecap="round"/>
+                            <!-- Floating music notes -->
+                            <text class="sb-note sb-note-1" x="116" y="56" font-size="15" fill="#9b7cd4" opacity="0.8">♪</text>
+                            <text class="sb-note sb-note-2" x="12"  y="60" font-size="12" fill="#7aadcc" opacity="0.7">♫</text>
+                            <text class="sb-note sb-note-3" x="120" y="92" font-size="11" fill="#c4a0e8" opacity="0.6">♩</text>
+                        </svg>
+                        <span class="sounds-bunny-hint">♪ Tap for calming sounds</span>
+                    </button>
+
+                    <!-- Player shell: fixed popup, hidden until bunny click -->
+                    <div class="sounds-player-shell" id="soundsPlayerShell">
+                        <div class="sounds-float-header" id="soundsFloatHeader">
+                            <span class="sounds-float-title">🎵 Music Therapy</span>
+                            <div class="sounds-float-btns">
+                                <button id="soundsCollapseBtn" aria-label="Collapse" title="Collapse">▾</button>
+                                <button id="soundsDockBtn" aria-label="Close player" title="Close">✕</button>
                             </div>
                         </div>
                         <div id="soundcloud-container"></div>
@@ -352,8 +396,7 @@
                             </svg>
                         </div>
                         <div class="chat-preview-title-group">
-                            <h2>Chat with SafeSpace AI</h2>
-                            <p>Your AI companion is here to listen and support you.</p>
+                            <h2>Let's Chat !</h2>
                         </div>
                     </div>
 
@@ -367,14 +410,10 @@
                         <button class="chat-quick-chip" data-response="Can you help me relax?">Can you help me relax?</button>
                     </div>
 
-                    <div class="chat-preview-input-row">
-                        <input type="text" class="chat-preview-input" placeholder="Type your message..." id="dashboardChatInput" />
-                        <button class="chat-preview-send" id="dashboardChatSend" aria-label="Open chat">
-                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                            </svg>
-                        </button>
-                    </div>
+                    <button class="chat-open-btn" id="dashboardChatOpen" aria-label="Open chat">
+                        Start Chatting
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                    </button>
                 </div>
 
                 <!-- ── EMERGENCY SUPPORT (right col, row 3) ── -->
@@ -479,19 +518,11 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Dashboard send button
-            var sendBtn = document.getElementById('dashboardChatSend');
-            var input   = document.getElementById('dashboardChatInput');
-            if (sendBtn && input) {
-                sendBtn.addEventListener('click', function() {
-                    openChatWithMessage(input.value.trim());
-                    input.value = '';
-                });
-                input.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter') {
-                        openChatWithMessage(input.value.trim());
-                        input.value = '';
-                    }
+            // Dashboard open-chat button
+            var openBtn = document.getElementById('dashboardChatOpen');
+            if (openBtn) {
+                openBtn.addEventListener('click', function() {
+                    openChatWithMessage('');
                 });
             }
 

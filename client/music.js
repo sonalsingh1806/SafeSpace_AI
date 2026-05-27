@@ -1,157 +1,109 @@
-// SafeSpace AI - SoundCloud Calming Sounds Module
-// Reconfigure by changing the playlist URL constant below.
+// SafeSpace AI — Calming Sounds (YouTube popup)
+// To swap a track, replace its `id` with any YouTube video ID.
 
-const SOUNDCLOUD_PLAYLIST_URL = 'https://api.soundcloud.com/playlists/soundcloud:playlists:2185118780';
+const TRACKS = [
+    { label: '🌧️ Rain',        id: 'nMfPqeZjc2c' },
+    { label: '🤍 White Noise', id: '1ZYbU82GVz4' },
+    { label: '💤 Sleep',       id: 'lFcSrYw-ARY' },
+];
 
-const CONTAINER_ID = 'soundcloud-container';
-const WIDGET_API_URL = 'https://w.soundcloud.com/player/api.js';
-
-let iframe = null;
-let widget = null;
-let isVisible = false;
 let currentTrackIndex = 0;
+let playerReady = false;
 
-function buildEmbedUrl() {
-    const encoded = encodeURIComponent(SOUNDCLOUD_PLAYLIST_URL);
-    // visual=true shows full playlist UI. auto_play=true plays first song when widget opens.
-    return `https://w.soundcloud.com/player/?url=${encoded}&auto_play=true&visual=false&show_user=false`;
+function buildYouTubeUrl(id) {
+    return `https://www.youtube.com/embed/${id}?loop=1&playlist=${id}&controls=1&rel=0&autoplay=1&modestbranding=1`;
 }
 
-function loadWidgetApi(callback) {
-    if (window.SC && window.SC.Widget) {
-        callback();
-        return;
-    }
-    const script = document.createElement('script');
-    script.src = WIDGET_API_URL;
-    script.onload = callback;
-    document.head.appendChild(script);
-}
-
-function bindSingleTrackLoop() {
-    if (!widget) return;
-    // Save current track index when a track starts (user selection or auto-advance)
-    widget.bind(window.SC.Widget.Events.PLAY, function () {
-        widget.getCurrentSoundIndex(function (idx) {
-            currentTrackIndex = idx;
-        });
-    });
-    // When track finishes, skip back to the same track and play (loop)
-    widget.bind(window.SC.Widget.Events.FINISH, function () {
-        widget.skip(currentTrackIndex);
-        setTimeout(() => {
-            widget.play();
-        }, 200); //delay to ensure track is loaded before play
-    }); 
-}
-
-function toggleSoundCloudWidget() {
-    const player = document.getElementById('floating-player');
-    const container = document.getElementById(CONTAINER_ID);
-
-    if (!iframe) {
-        iframe = document.createElement('iframe');
-        iframe.src = buildEmbedUrl();
+function renderIframe(container, id) {
+    const existing = container.querySelector('iframe');
+    const newSrc   = buildYouTubeUrl(id);
+    if (existing) {
+        existing.src = newSrc;
+    } else {
+        const iframe = document.createElement('iframe');
+        iframe.src = newSrc;
         iframe.setAttribute('width', '100%');
         iframe.setAttribute('height', '100%');
-        iframe.setAttribute('scrolling', 'no');
-        iframe.setAttribute('frameborder', 'no');
-        iframe.setAttribute('allow', 'autoplay');
-
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+        iframe.setAttribute('allowfullscreen', '');
         container.appendChild(iframe);
+    }
+}
 
-        loadWidgetApi(function () {
-            widget = window.SC.Widget(iframe);
-            widget.bind(window.SC.Widget.Events.READY, bindSingleTrackLoop);
+function buildTrackBar(shell, container) {
+    // Only build once
+    if (shell.querySelector('.sounds-track-bar')) return;
+    const bar = document.createElement('div');
+    bar.className = 'sounds-track-bar';
+    TRACKS.forEach(function (track, i) {
+        const btn = document.createElement('button');
+        btn.className = 'sounds-track-btn' + (i === currentTrackIndex ? ' active' : '');
+        btn.textContent = track.label;
+        btn.addEventListener('click', function () {
+            currentTrackIndex = i;
+            bar.querySelectorAll('.sounds-track-btn').forEach(b => b.classList.toggle('active', b === btn));
+            renderIframe(container, track.id);
         });
-    }
-
-    // ✅ Toggle + return state
-    if (player.classList.contains('hidden')) {
-        player.classList.remove('hidden');
-        return 'opened';
-    } else {
-        player.classList.add('hidden');
-        return 'closed';
-    }
+        bar.appendChild(btn);
+    });
+    shell.insertBefore(bar, shell.querySelector('.sounds-float-header').nextSibling);
 }
 
-window.toggleSoundCloudWidget = toggleSoundCloudWidget;
-
-function toggleCollapse() {
-    const player = document.getElementById('floating-player');
-    player.classList.toggle('collapsed');
-}
-
-window.toggleCollapse = toggleCollapse;
+// Legacy shim
+window.toggleSoundCloudWidget = function () {};
 
 document.addEventListener('DOMContentLoaded', function () {
-    const player      = document.getElementById('floating-player');
-    const header      = document.getElementById('floating-header');
-    const collapseBtn = document.getElementById('floating-collapse');
-    const closeBtn    = document.getElementById('floating-close');
+    const bunnyBtn    = document.getElementById('soundsBunnyBtn');
+    const shell       = document.getElementById('soundsPlayerShell');
+    const container   = document.getElementById('soundcloud-container');
+    const floatHeader = document.getElementById('soundsFloatHeader');
+    const collapseBtn = document.getElementById('soundsCollapseBtn');
+    const dockBtn     = document.getElementById('soundsDockBtn');
 
-    // Collapse button — flip chevron, animate the container shut/open.
+    if (!shell || !container || !bunnyBtn) return;
+
+    function openPlayer() {
+        // Clear any stale inline position from a previous drag so the CSS
+        // class always positions it freshly at bottom-right.
+        shell.style.cssText = '';
+        shell.classList.add('open');
+        shell.classList.remove('collapsed');
+        collapseBtn.textContent = '▾';
+        bunnyBtn.classList.add('active');
+        // Build track bar + load first track on first open
+        buildTrackBar(shell, container);
+        if (!playerReady) {
+            renderIframe(container, TRACKS[currentTrackIndex].id);
+            playerReady = true;
+        }
+    }
+
+    function closePlayer() {
+        shell.classList.remove('open', 'collapsed');
+        bunnyBtn.classList.remove('active');
+        shell.style.cssText = '';
+    }
+
+    // Bunny opens the popup
+    bunnyBtn.addEventListener('click', openPlayer);
+
+    // Close / dock back
+    dockBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        closePlayer();
+    });
+
+    // Collapse
     collapseBtn.addEventListener('click', function (e) {
         e.stopPropagation();
-        toggleCollapse();
+        shell.classList.toggle('collapsed');
+        collapseBtn.textContent = shell.classList.contains('collapsed') ? '▸' : '▾';
     });
 
-    // Close button — fully hide the player.
-    closeBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        toggleSoundCloudWidget();
-    });
-
-    // Clicking the header title area also collapses/expands (skip if it was a drag).
-    header.addEventListener('click', function (e) {
-        if (e.target.closest('button')) return; // handled by the buttons above
-        if (wasDrag) return;                     // ignore drag-release clicks
-        toggleCollapse();
-    });
-
-    // Dragging logic — tracks movement so a drag-release doesn't trigger collapse.
-    let wasDrag = false;
-    let dragStartX, dragStartY, offsetX, offsetY;
-
-    header.addEventListener('mousedown', function (e) {
-        if (e.target.closest('button')) return; // don't drag when clicking buttons
-        wasDrag = false;
-        dragStartX = e.clientX;
-        dragStartY = e.clientY;
-        offsetX = e.clientX - player.offsetLeft;
-        offsetY = e.clientY - player.offsetTop;
-        header.style.cursor = 'grabbing';
-    });
-
-    document.addEventListener('mousemove', function (e) {
-        // Only move if a mousedown on the header started the drag.
-        if (offsetX === undefined) return;
-
-        const dx = e.clientX - dragStartX;
-        const dy = e.clientY - dragStartY;
-        if (!wasDrag && Math.sqrt(dx * dx + dy * dy) > 4) {
-            wasDrag = true; // threshold: 4 px movement = it's a drag, not a click
-        }
-
-        if (!wasDrag) return;
-
-        let newLeft = e.clientX - offsetX;
-        let newTop  = e.clientY - offsetY;
-
-        const playerRect = player.getBoundingClientRect();
-        newLeft = Math.max(0, Math.min(newLeft, window.innerWidth  - playerRect.width));
-        newTop  = Math.max(0, Math.min(newTop,  window.innerHeight - playerRect.height));
-
-        player.style.left   = newLeft + 'px';
-        player.style.top    = newTop  + 'px';
-        player.style.bottom = 'auto';
-        player.style.right  = 'auto';
-    });
-
-    document.addEventListener('mouseup', function () {
-        offsetX = undefined;
-        header.style.cursor = 'grab';
+    floatHeader.addEventListener('click', function (e) {
+        if (e.target.closest('button')) return;
+        shell.classList.toggle('collapsed');
+        collapseBtn.textContent = shell.classList.contains('collapsed') ? '▸' : '▾';
     });
 });
-
